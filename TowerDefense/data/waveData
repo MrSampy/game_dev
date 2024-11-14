@@ -1,0 +1,11 @@
+wave 1
+recruit 
+20 0 1
+
+wave 2
+brute
+18 0 1.25
+
+wave 3
+speedy
+30 0 0.75
