@@ -1,0 +1,22 @@
+-----turrets-----
+
+12/19.5/28/37.5/61.25 | $100/150/250/400/675
+name Basic Turret
+type turret
+can_hit BOTH
+cost 100
+energy 0
+sprite_base basic_base
+sprite_turret basic_turret
+sprite_proj basic_shot
+damage 10 15 20 25 30
+rate 1.2 1.2 1.4 1.6 2.4
+range 3.25 3.35 3.45 3.55 3.75
+proj_spd 16 16 16 16 18
+effective_range 1.1
+up_cost 50 100 150 275
+max_level 5
+targeting projectile
+special none
+description Simple tower
+end
