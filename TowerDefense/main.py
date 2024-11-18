@@ -404,7 +404,9 @@ while True:
             screen.blit(arrowPics[i][0], (path[i][1][0] * 50 - 50, path[i][1][1] * 50 - 50))
             screen.blit(arrowPics[i][1], (path[i][-2][0] * 50 - 50, path[i][-2][1] * 50 - 50))
 
-
+        if curWave >= len(waveInfo):
+            intro = True
+            break
         if currentlyInWave:
             i = 0
             while i < len(waveInfo[curWave]):
@@ -689,9 +691,6 @@ while True:
                             if towerList[i + mul6].cost > money:
                                 msgText = "Can't afford this tower!"
                                 msgTimer = 0.5
-                            elif towerList[i + mul6].energy + energy[0] > energy[1]:
-                                msgText = "Insufficient energy!"
-                                msgTimer = 0.5
 
                 elif butListTowers[i].collidepoint(mousePos[0], mousePos[1]) \
                         and mousePressed[0] == 1 and currentlyInWave:
@@ -712,64 +711,6 @@ while True:
                     viewedTower = placedTowersLoc.index(components.xy_to_pos(mousePos))
                 elif mousePos[0] < 1000:
                     viewedTower = -1
-
-            if viewedTower >= 0:
-                if not hovered:
-                    display_stats(placedTowers[viewedTower])
-                    pygame.draw.rect(screen, (225, 100, 100), butSell)
-                    components.create_text(screen, (butSell[0] + butSell[2] // 2, butSell[1] + butSell[3] // 2 - 13),
-                                           'SELL FOR', True, levelTowerFont, (0, 0, 0))
-                    components.create_text(screen, (butSell[0] + butSell[2] // 2, butSell[1] + butSell[3] // 2 + 11),
-                                           "$" + str(int(placedTowers[viewedTower].sellPrice)), True, levelTowerFont2, (0, 0, 0))
-
-                    if butSell.collidepoint(mousePos[0], mousePos[1]) and not currentlyInWave:
-                        pygame.draw.rect(screen, (0, 0, 0), butSell, 3)
-                        if mousePressed[0] == 1:
-                            if energy[0] < 0 - placedTowers[viewedTower].energy:
-                                msgText = 'Energy too low!'
-                                msgTimer = 0.75
-                            else:
-                                if placedTowers[viewedTower].energy < 0:
-                                    energy[1] += placedTowers[viewedTower].energy
-                                    energy[0] += placedTowers[viewedTower].energy
-                                else:
-                                    energy[0] += placedTowers[viewedTower].energy
-                                money += int(placedTowers[viewedTower].sellPrice)
-                                if placedTowers[viewedTower].special == 'income':
-                                    income -= placedTowers[viewedTower].specialVal
-                                placedTowers[viewedTower].specialVal = 0
-                                adjacentTowerList = []
-                                for i in placedTowers:
-                                    if abs(placedTowers[viewedTower].pos[0] - i.pos[0]) + abs(placedTowers[viewedTower].pos[1] - i.pos[1]) == 1:
-                                        adjacentTowerList.append(i)
-                                i = 0
-                                while i < len(adjacentTowerList):
-                                    if placedTowers[viewedTower].type == "wall" and adjacentTowerList[i].type == "wall":
-                                        if [placedTowers[viewedTower].pos, adjacentTowerList[i].pos] in wallConnect:
-                                            del(wallConnect[wallConnect.index([placedTowers[viewedTower].pos, adjacentTowerList[i].pos])])
-                                            i -= 1
-                                        if [adjacentTowerList[i].pos, placedTowers[viewedTower].pos] in wallConnect:
-                                            del(wallConnect[wallConnect.index([adjacentTowerList[i].pos, placedTowers[viewedTower].pos])])
-                                            i -= 1
-                                    i += 1
-                                if placedTowers[viewedTower].type == "booster":
-                                    for i in adjacentTowerList:
-                                        secAdjTowerList = []
-                                        for j in placedTowers:
-                                            if abs(i.pos[0] - j.pos[0]) + abs(i.pos[1] - j.pos[1]) == 1:
-                                                secAdjTowerList.append(j)
-
-                                        i.calc_boost(secAdjTowerList)
-
-                                del placedTowers[viewedTower]
-                                del placedTowersLoc[viewedTower]
-                                updatePath = True
-                                viewedTower = -1
-                    elif mousePressed[0] == 1 and butSell.collidepoint(mousePos[0], mousePos[1]) and currentlyInWave:
-                        msgText = 'Cannot sell towers during a wave'
-                        msgTimer = 0.75
-                    else:
-                        pygame.draw.rect(screen, (0, 0, 0), butSell, 1)
         
         if money > 50000:
             money = 50000
