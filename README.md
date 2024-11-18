@@ -35,6 +35,11 @@ Welcome to the Tower Defense Game, a strategy game where you defend your base fr
 ## Setup
 
 1. Clone this repository to your local machine.
-2. Install the required dependencies using pip:
-   ```bash
-   pip install -r requirements.txt
+2. Run main.py
+
+## Images
+![Alt text](TowerDefense/images/readme/1.jpg)
+![Alt text](TowerDefense/images/readme/2.jpg)
+![Alt text](TowerDefense/images/readme/3.jpg)
+
+
