@@ -680,7 +680,7 @@ while True:
 
             colNextWaveText = [55, 55, 55]
             components.create_text(screen, (butStopGame[0] + butStopGame[2] // 2, butStopGame[1] + butStopGame[3] // 2 - 5),
-                        "STOP GAME", True, levelNextWaveFont, colNextWaveText)
+                        "EXIT TO MENU", True, levelNextWaveFont, colNextWaveText)
             components.create_text(screen, (butShowWaveInfo[0] + butShowWaveInfo[2] // 2, butShowWaveInfo[1] + butShowWaveInfo[3] // 2 - 5),
                         "WAVE INFO", True, levelNextWaveFont, colNextWaveText)
             components.create_text(screen, (butNextWave[0] + butNextWave[2] // 2, butNextWave[1] + butNextWave[3] // 2 - 5),
@@ -700,7 +700,7 @@ while True:
             components.create_text(screen, (butShowWaveInfo[0] + butShowWaveInfo[2] // 2, butShowWaveInfo[1] + butShowWaveInfo[3] // 2 - 5),
                         "WAVE INFO", True, levelNextWaveFont, colNextWaveText)
             components.create_text(screen, (butStopGame[0] + butStopGame[2] // 2, butStopGame[1] + butStopGame[3] // 2),
-                                   "STOP GAME", True, levelNextWaveFont, colNextWaveText)
+                                   "EXIT TO MENU", True, levelNextWaveFont, colNextWaveText)
             if butShowWaveInfo.collidepoint(mousePos[0], mousePos[1]):
                 pygame.draw.rect(screen, (0, 0, 0), butShowWaveInfo, 3)
                 if not hovered and selectedTower == 'none' and viewedTower <= 0:
