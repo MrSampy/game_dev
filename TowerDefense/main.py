@@ -36,7 +36,7 @@ def display_stats(sel_tower):
     components.create_text(screen, (disL - 150, 385), str(round(sel_tower.total_damage_dealt)), True,
                            levelTowerDescriptionFont, (50, 50, 50))
 
-    components.create_paragraph(screen, (disL - 285, 570), sel_tower.stats['description'], levelTowerDescriptionFont, (25, 25, 25), 18, 270)
+    components.create_paragraph(screen, (disL - 285, 550), sel_tower.stats['description'], levelTowerDescriptionFont, (25, 25, 25), 18, 270)
     
     ver_dist = 28
     if (not butUpgrade.collidepoint(mousePos[0], mousePos[1])) or sel_tower.curLevel == sel_tower.maxLevel:
@@ -198,6 +198,7 @@ butSell = pygame.Rect(disL - 115, 500, 90, 55)
 
 butUpgrade = pygame.Rect(disL - 115, 430, 90, 55)
 
+butSell = pygame.Rect(disL - 115, 500, 90, 55)
 butNextWave = pygame.Rect(disL - 290, disH - 65, 280, 58)
 butStopGame = pygame.Rect(disL - 290, 580, 280, 58)
 colNextWaveBut = [[175, 175, 175], [15, 215, 110]]
@@ -726,7 +727,82 @@ while True:
                     viewedTower = placedTowersLoc.index(components.xy_to_pos(mousePos))
                 elif mousePos[0] < 1000:
                     viewedTower = -1
-        
+            # draw range of da tower
+            if viewedTower >= 0:
+                if not hovered:
+                    # stats
+                    display_stats(placedTowers[viewedTower])
+
+                    # sell button
+                    pygame.draw.rect(screen, (225, 100, 100), butSell)
+                    # text of sell button
+                    components.create_text(screen, (butSell[0] + butSell[2] // 2, butSell[1] + butSell[3] // 2 - 13),
+                                           'SELL FOR', True, levelTowerFont, (0, 0, 0))
+                    components.create_text(screen, (butSell[0] + butSell[2] // 2, butSell[1] + butSell[3] // 2 + 11),
+                                           "$" + str(int(placedTowers[viewedTower].sellPrice)), True, levelTowerFont2,
+                                           (0, 0, 0))
+
+                    # interact with sell button
+                    if butSell.collidepoint(mousePos[0], mousePos[1]) and not currentlyInWave:
+                        pygame.draw.rect(screen, (0, 0, 0), butSell, 3)
+                        if mousePressed[0] == 1:  # on click, sell the tower
+                            # energy check
+                            if energy[0] < 0 - placedTowers[viewedTower].energy:
+                                msgText = 'Energy too low!'
+                                msgTimer = 0.75
+                            else:  # passes energy check
+                                if placedTowers[viewedTower].energy < 0:
+                                    energy[1] += placedTowers[viewedTower].energy
+                                    energy[0] += placedTowers[viewedTower].energy
+                                else:  # remove da tower
+                                    energy[0] += placedTowers[viewedTower].energy
+                                # update monies
+                                money += int(placedTowers[viewedTower].sellPrice)
+                                if placedTowers[viewedTower].special == 'income':  # update income on sell
+                                    income -= placedTowers[viewedTower].specialVal
+
+                                # check boosts
+                                placedTowers[viewedTower].specialVal = 0
+                                adjacentTowerList = []
+                                for i in placedTowers:
+                                    # calculate distance to tower and check if it equals one
+                                    if abs(placedTowers[viewedTower].pos[0] - i.pos[0]) + abs(
+                                            placedTowers[viewedTower].pos[1] - i.pos[1]) == 1:
+                                        adjacentTowerList.append(i)
+                                # update wall connections
+                                i = 0
+                                while i < len(adjacentTowerList):
+                                    if placedTowers[viewedTower].type == "wall" and adjacentTowerList[i].type == "wall":
+                                        if [placedTowers[viewedTower].pos, adjacentTowerList[i].pos] in wallConnect:
+                                            del (wallConnect[wallConnect.index(
+                                                [placedTowers[viewedTower].pos, adjacentTowerList[i].pos])])
+                                            i -= 1
+                                        if [adjacentTowerList[i].pos, placedTowers[viewedTower].pos] in wallConnect:
+                                            del (wallConnect[wallConnect.index(
+                                                [adjacentTowerList[i].pos, placedTowers[viewedTower].pos])])
+                                            i -= 1
+                                    i += 1
+                                # update each adjacent tower if booster
+                                if placedTowers[viewedTower].type == "booster":
+                                    for i in adjacentTowerList:
+                                        secAdjTowerList = []
+                                        for j in placedTowers:
+                                            # calculate distance to tower and check if it equals one
+                                            if abs(i.pos[0] - j.pos[0]) + abs(i.pos[1] - j.pos[1]) == 1:
+                                                secAdjTowerList.append(j)
+
+                                        i.calc_boost(secAdjTowerList)
+
+                                del placedTowers[viewedTower]
+                                del placedTowersLoc[viewedTower]
+                                updatePath = True  # reset path
+                                viewedTower = -1  # reset viewed tower
+                    elif mousePressed[0] == 1 and butSell.collidepoint(mousePos[0], mousePos[1]) and currentlyInWave:
+                        msgText = 'Cannot sell towers during a wave'
+                        msgTimer = 0.75
+                    else:
+                        pygame.draw.rect(screen, (0, 0, 0), butSell, 1)
+
         if money > 50000:
             money = 50000
 
