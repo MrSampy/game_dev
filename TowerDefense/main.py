@@ -199,6 +199,7 @@ butSell = pygame.Rect(disL - 115, 500, 90, 55)
 butUpgrade = pygame.Rect(disL - 115, 430, 90, 55)
 
 butNextWave = pygame.Rect(disL - 290, disH - 65, 280, 58)
+butStopGame = pygame.Rect(disL - 290, 580, 280, 58)
 colNextWaveBut = [[175, 175, 175], [15, 215, 110]]
 
 butOverlay = pygame.Rect(disL - 220, disH - 87, 140, 18)
@@ -648,6 +649,10 @@ while True:
 
         colNextWaveText = [0, 0, 0]
         if currentlyInWave:
+            pygame.draw.rect(screen, colNextWaveBut[0], butStopGame)
+            pygame.draw.rect(screen, (0, 0, 0), butStopGame, 1)
+            components.create_text(screen, (butStopGame[0] + butStopGame[2] // 2, butStopGame[1] + butStopGame[3] // 2 - 5),
+                        "STOP GAME", True, levelNextWaveFont, colNextWaveText)
             pygame.draw.rect(screen, colNextWaveBut[0], butNextWave)
             pygame.draw.rect(screen, (0, 0, 0), butNextWave, 1)
             colNextWaveText = [55, 55, 55]
@@ -656,10 +661,20 @@ while True:
             components.create_text(screen, (disL - 150, disH - 18), 'spacebar to fast forward',
                                    True, levelFastFont, (0, 0, 0))
         elif not currentlyInWave:
+            pygame.draw.rect(screen, colNextWaveBut[0], butStopGame)
+            pygame.draw.rect(screen, (0, 0, 0), butStopGame, 1)
+
             pygame.draw.rect(screen, colNextWaveBut[1], butNextWave)
             pygame.draw.rect(screen, (0, 0, 0), butNextWave, 1)
             components.create_text(screen, (butNextWave[0] + butNextWave[2] // 2, butNextWave[1] + butNextWave[3] // 2),
                         "NEXT WAVE", True, levelNextWaveFont, colNextWaveText)
+            components.create_text(screen, (butStopGame[0] + butStopGame[2] // 2, butStopGame[1] + butStopGame[3] // 2),
+                                   "STOP GAME", True, levelNextWaveFont, colNextWaveText)
+            if butStopGame.collidepoint(mousePos[0], mousePos[1]):
+                pygame.draw.rect(screen, (0, 0, 0), butStopGame, 3)
+                if mousePressed[0] == 1:
+                    intro = True
+                    break
             if butNextWave.collidepoint(mousePos[0], mousePos[1]) or keys[pygame.K_SPACE]:
                 pygame.draw.rect(screen, (0, 0, 0), butNextWave, 3)
                 if mousePressed[0] == 1 or keys[pygame.K_SPACE]:
