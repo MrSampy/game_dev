@@ -14,10 +14,37 @@ import random
 import time
 import sys
 
+
 def load_pics(folder, name):
     location = folder + name + ".png"
     return pygame.image.load(location).convert_alpha()
 
+
+def display_wave_info(waveInfo, enemyInfo, curWave):
+    waveIndex = curWave + 1
+    if waveIndex >= len(waveInfo):
+        return
+    currWave = waveInfo[waveIndex]
+    enemyName = currWave[0][0]
+    currEnemyInfo = enemyInfo[enemyName]
+    stat_col = (0, 0, 100)
+    ver_dist = 28
+
+    components.create_text(screen, (disL - 150, 360), enemyName, True,
+                           levelTowerTitleFont, (0, 50, 175))
+    components.create_text(screen, (disL - 150, 385), "Enemy count during next wave {count}".format(count = currWave[0][1]), True,
+                           levelTowerDescriptionFont, (50, 50, 50))
+
+    components.create_text(screen, (disL - 280, 410), '  Health:', False, levelTowerFont, (0, 0, 0))
+    components.create_text(screen, (disL - 208, 410), str(currEnemyInfo['health']), False, levelTowerFont, stat_col)
+
+    components.create_text(screen, (disL - 280, 410 + ver_dist), '  Damage:', False, levelTowerFont, (0, 0, 0))
+    components.create_text(screen, (disL - 200, 410 + ver_dist), str(currEnemyInfo['dmg']), False, levelTowerFont,
+                           stat_col)
+
+    components.create_text(screen, (disL - 280, 410 + ver_dist * 2), '  Speed:', False, levelTowerFont, (0, 0, 0))
+    components.create_text(screen, (disL - 212, 410 + ver_dist * 2), str(currEnemyInfo['speed']), False, levelTowerFont,
+                           stat_col)
 
 def display_stats(sel_tower):
     global msgTimer, msgText, money, mousePressed, income
@@ -36,8 +63,6 @@ def display_stats(sel_tower):
     components.create_text(screen, (disL - 150, 385), str(round(sel_tower.total_damage_dealt)), True,
                            levelTowerDescriptionFont, (50, 50, 50))
 
-    components.create_paragraph(screen, (disL - 285, 550), sel_tower.stats['description'], levelTowerDescriptionFont, (25, 25, 25), 18, 270)
-    
     ver_dist = 28
     if (not butUpgrade.collidepoint(mousePos[0], mousePos[1])) or sel_tower.curLevel == sel_tower.maxLevel:
         stat_col = (0, 0, 100)
@@ -63,20 +88,15 @@ def display_stats(sel_tower):
         stat_up_col = (0, 125, 50)
         if sel_tower.type == 'turret':
             components.create_text(screen, (disL - 280, 410), '  Dmg:', False, levelTowerFont, (0, 0, 0))
-            if sel_tower.damage < sel_tower.preview_damage:
-                components.create_text(screen, (disL - 220, 410), str(sel_tower.preview_damage), False, levelTowerFont, stat_up_col)
-            else:
-                components.create_text(screen, (disL - 220, 410), str(sel_tower.preview_damage), False, levelTowerFont, stat_col)
+            components.create_text(screen, (disL - 220, 410), str(sel_tower.damage), False, levelTowerFont,
+                                   stat_col)
             components.create_text(screen, (disL - 280, 410 + ver_dist), '  Rate:', False, levelTowerFont, (0, 0, 0))
             if sel_tower.rate < sel_tower.preview_rate:
                 components.create_text(screen, (disL - 220, 410 + ver_dist), str(round(sel_tower.preview_rate, 2)), False, levelTowerFont, stat_up_col)
             else:
                 components.create_text(screen, (disL - 220, 410 + ver_dist), str(round(sel_tower.preview_rate, 2)), False, levelTowerFont, stat_col)
             components.create_text(screen, (disL - 280, 410 + ver_dist * 2), 'Range:', False, levelTowerFont, (0, 0, 0))
-            if sel_tower.range < sel_tower.preview_range:
-                components.create_text(screen, (disL - 220, 410 + ver_dist * 2), str(round(sel_tower.preview_range, 2)), False, levelTowerFont, stat_up_col)
-            else:
-                components.create_text(screen, (disL - 220, 410 + ver_dist * 2), str(round(sel_tower.preview_range, 2)), False, levelTowerFont, stat_col)
+            components.create_text(screen, (disL - 220, 410 + ver_dist * 2), str(round(sel_tower.range, 2)), False, levelTowerFont, stat_col)
             if sel_tower.projSpd > 0:
                 components.create_text(screen, (disL - 280, 410 + ver_dist * 3), ' P.Spd:', False, levelTowerFont, (0, 0, 0))
                 if sel_tower.projSpd < sel_tower.preview_projSpd:
@@ -112,6 +132,7 @@ screen = pygame.display.set_mode((disL, disH))
 pygame.display.set_caption("Tower Defense")
 
 intro = True
+isInfoOnScreen = False
 
 msLevelSelectFont = pygame.font.SysFont('Trebuchet MS', 32, False)
 msMenuButFont = pygame.font.SysFont('Trebuchet MS', 45, True)
@@ -194,14 +215,13 @@ for i in range(len(towerList)):
             break
 
 
-butSell = pygame.Rect(disL - 115, 500, 90, 55)
-
 butUpgrade = pygame.Rect(disL - 115, 430, 90, 55)
 
-butSell = pygame.Rect(disL - 115, 500, 90, 55)
+butSell = pygame.Rect(disL - 115, 455, 90, 55)
 butNextWave = pygame.Rect(disL - 290, disH - 65, 280, 58)
-butStopGame = pygame.Rect(disL - 290, 580, 280, 58)
-colNextWaveBut = [[175, 175, 175], [15, 215, 110]]
+butStopGame = pygame.Rect(disL - 290, 590, 280, 58)
+butShowWaveInfo = pygame.Rect(disL - 290, 520, 280, 58)
+colNextWaveBut = [[175, 175, 175], [15, 215, 110], [3, 132, 252], [192, 207, 126]]
 
 butOverlay = pygame.Rect(disL - 220, disH - 87, 140, 18)
 colOverlayBut = [240, 150, 50]
@@ -652,25 +672,40 @@ while True:
         if currentlyInWave:
             pygame.draw.rect(screen, colNextWaveBut[0], butStopGame)
             pygame.draw.rect(screen, (0, 0, 0), butStopGame, 1)
-            components.create_text(screen, (butStopGame[0] + butStopGame[2] // 2, butStopGame[1] + butStopGame[3] // 2 - 5),
-                        "STOP GAME", True, levelNextWaveFont, colNextWaveText)
+            pygame.draw.rect(screen, colNextWaveBut[0], butShowWaveInfo)
+            pygame.draw.rect(screen, (0, 0, 0), butShowWaveInfo, 1)
             pygame.draw.rect(screen, colNextWaveBut[0], butNextWave)
             pygame.draw.rect(screen, (0, 0, 0), butNextWave, 1)
+
+
             colNextWaveText = [55, 55, 55]
+            components.create_text(screen, (butStopGame[0] + butStopGame[2] // 2, butStopGame[1] + butStopGame[3] // 2 - 5),
+                        "STOP GAME", True, levelNextWaveFont, colNextWaveText)
+            components.create_text(screen, (butShowWaveInfo[0] + butShowWaveInfo[2] // 2, butShowWaveInfo[1] + butShowWaveInfo[3] // 2 - 5),
+                        "WAVE INFO", True, levelNextWaveFont, colNextWaveText)
             components.create_text(screen, (butNextWave[0] + butNextWave[2] // 2, butNextWave[1] + butNextWave[3] // 2 - 5),
                         "NEXT WAVE", True, levelNextWaveFont, colNextWaveText)
             components.create_text(screen, (disL - 150, disH - 18), 'spacebar to fast forward',
                                    True, levelFastFont, (0, 0, 0))
         elif not currentlyInWave:
-            pygame.draw.rect(screen, colNextWaveBut[0], butStopGame)
+            pygame.draw.rect(screen, colNextWaveBut[3], butStopGame)
             pygame.draw.rect(screen, (0, 0, 0), butStopGame, 1)
-
+            pygame.draw.rect(screen, colNextWaveBut[2], butShowWaveInfo)
+            pygame.draw.rect(screen, (0, 0, 0), butShowWaveInfo, 1)
             pygame.draw.rect(screen, colNextWaveBut[1], butNextWave)
             pygame.draw.rect(screen, (0, 0, 0), butNextWave, 1)
+
             components.create_text(screen, (butNextWave[0] + butNextWave[2] // 2, butNextWave[1] + butNextWave[3] // 2),
                         "NEXT WAVE", True, levelNextWaveFont, colNextWaveText)
+            components.create_text(screen, (butShowWaveInfo[0] + butShowWaveInfo[2] // 2, butShowWaveInfo[1] + butShowWaveInfo[3] // 2 - 5),
+                        "WAVE INFO", True, levelNextWaveFont, colNextWaveText)
             components.create_text(screen, (butStopGame[0] + butStopGame[2] // 2, butStopGame[1] + butStopGame[3] // 2),
                                    "STOP GAME", True, levelNextWaveFont, colNextWaveText)
+            if butShowWaveInfo.collidepoint(mousePos[0], mousePos[1]):
+                pygame.draw.rect(screen, (0, 0, 0), butShowWaveInfo, 3)
+                if not hovered and selectedTower == 'none' and viewedTower <= 0:
+                    display_wave_info(waveInfo, enemyInfo, curWave)
+
             if butStopGame.collidepoint(mousePos[0], mousePos[1]):
                 pygame.draw.rect(screen, (0, 0, 0), butStopGame, 3)
                 if mousePressed[0] == 1:
