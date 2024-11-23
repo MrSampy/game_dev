@@ -1,31 +1,38 @@
 # Tower Defense Game
 
-Welcome to the Tower Defense Game, a strategy game where you defend your base from waves of enemies by strategically placing towers.
+## Проєкт умовно складається з чотирьох частин
 
-## Features
+1. **Проєктування**
+   - Розробка концептуальної ідеї гри.
+   - Дизайн мапи та візуальних елементів.
+   - Створення логіки хвиль ворогів.
 
-- **Wave-Based Gameplay**: Survive against increasingly challenging waves of enemies.
-- **Tower Placement**: Strategically place towers to optimize damage and coverage.
-- **Enemy Spawning**: Diverse enemies spawn at intervals, challenging your defensive strategy.
-- **Dynamic Map**: Engage in a unique map layout that requires careful planning.
+2. **Ігровий рушій**
+   - Реалізація рушія на базі `Pygame`.
+   - Взаємодія між ворогами, вежами та гравцем.
+   - Візуалізація графіки та анімацій.
 
-## How to Play
+3. **Розробка контенту**
+   - Створення спрайтів веж, ворогів і мапи.
+   - Підготовка даних хвиль ворогів.
 
-1. **Start the Game**: Launch the game from the main menu.
-2. **Place Towers**: Use your in-game currency to place towers at strategic locations on the map.
-3. **Survive Waves**: Defeat enemies in each wave to progress to the next one.
-4. **Advance to New Waves**: Press the `Next Wave` button to initiate the next wave of enemies.
+4. **Розробка ігрових механік**
+   - Реалізація системи розміщення веж.
+   - Алгоритми атаки веж.
+   - Налаштування складності хвиль.
 
-## Controls
+## Як грати
 
-- **Mouse**: Use the mouse to interact with the game UI and place towers.
-- **Keyboard**: 
-  - Press `SPACE` to start/pause the game.
+1. **Запустіть гру**: Розпочніть гру через головне меню.
+2. **Розміщуйте вежі**: Використовуйте ігрову валюту для розміщення веж у стратегічних місцях на карті.
+3. **Переживайте хвилі**: Перемагайте ворогів у кожній хвилі, щоб перейти до наступної.
+4. **Переходьте до нових хвиль**: Натисніть кнопку `Next Wave`, щоб почати наступну хвилю ворогів.
 
-## Future Plans
 
-- Add more tower types with unique abilities.
-- Introduce special boss waves for extra challenges.
+## Майбутні плани
+
+- Додати більше типів веж із унікальними можливостями.
+- Впровадити спеціальні хвилі з босами для додаткових викликів.
 
 ## Requirements
 
@@ -35,6 +42,11 @@ Welcome to the Tower Defense Game, a strategy game where you defend your base fr
 ## Setup
 
 1. Clone this repository to your local machine.
-2. Install the required dependencies using pip:
-   ```bash
-   pip install -r requirements.txt
+2. Run main.py
+
+## Images
+![Alt text](TowerDefense/images/readme/1.jpg)
+![Alt text](TowerDefense/images/readme/2.jpg)
+![Alt text](TowerDefense/images/readme/3.jpg)
+
+
